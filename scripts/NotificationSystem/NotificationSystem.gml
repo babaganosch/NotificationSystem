@@ -90,7 +90,7 @@ function unsubscribe(_id) {
 /// @param		{func} [callback]		Callback function | Default: undefined
 /// @returns	N/A
 function broadcast(_msg, _cb) {
-	global.__notifications__.__broadcast__(_msg, _cb);
+	global.__notifications__.__broadcast__(_msg, argument[1]);
 }
 
 
@@ -151,7 +151,8 @@ function Receiver() constructor {
 		{
 			if (_events[_i].event == _msg) 
 			{
-				_events[_i].callback();
+				var _fn = _events[_i].callback;
+				if (!is_undefined(_fn)) _fn();
 				if (!is_undefined(_cb)) method(_parent, _cb)();
 			}
 		}
