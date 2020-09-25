@@ -1,4 +1,4 @@
 /// @description Send msg bar
 broadcast(MESSAGES.bar, function() {
-	ConsoleMessage("Message: bar!");
+	ConsoleMessage("Message 'bar' sent as callback.");
 });
