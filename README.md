@@ -21,8 +21,22 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 
 * In the Create event of an object, create a variable holding a new instance of `Receiver`. In this same event, call the function subscribe(). This object is now ready to receive messages over the notification bus.
 
+* In order to react to messages sent over the bus, you can bind callbacks to messages with the function `add`. The messages can be of any type, such as enums, numbers, strings etc.
+
 ```gml
 // Initializing the listener
 subscribe();
 receiver = new Receiver();
+
+receiver.add("Monster killed", function() {
+    increase_score();
+});
+
+receiver.add(MESSAGES.death, function() {
+    game_restart();
+});
+
+receiver.add(3, function() {
+    show_debug_message("Message 3 received!");
+});
 ```
