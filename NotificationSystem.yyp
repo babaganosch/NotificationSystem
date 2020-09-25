@@ -1,11 +1,13 @@
 {
   "resources": [
-    {"id":{"name":"obj_broadcast","path":"objects/obj_broadcast/obj_broadcast.yy",},"order":3,},
-    {"id":{"name":"obj_listener2","path":"objects/obj_listener2/obj_listener2.yy",},"order":1,},
-    {"id":{"name":"obj_listener3","path":"objects/obj_listener3/obj_listener3.yy",},"order":2,},
-    {"id":{"name":"demo_enums","path":"scripts/demo_enums/demo_enums.yy",},"order":0,},
+    {"id":{"name":"obj_button3","path":"objects/obj_button3/obj_button3.yy",},"order":6,},
+    {"id":{"name":"obj_button4","path":"objects/obj_button4/obj_button4.yy",},"order":7,},
+    {"id":{"name":"obj_button2","path":"objects/obj_button2/obj_button2.yy",},"order":5,},
+    {"id":{"name":"obj_button1","path":"objects/obj_button1/obj_button1.yy",},"order":4,},
+    {"id":{"name":"obj_listener","path":"objects/obj_listener/obj_listener.yy",},"order":8,},
+    {"id":{"name":"Demostuff","path":"scripts/Demostuff/Demostuff.yy",},"order":0,},
     {"id":{"name":"NotificationSystem","path":"scripts/NotificationSystem/NotificationSystem.yy",},"order":0,},
-    {"id":{"name":"obj_listener1","path":"objects/obj_listener1/obj_listener1.yy",},"order":0,},
+    {"id":{"name":"spr_button","path":"sprites/spr_button/spr_button.yy",},"order":0,},
     {"id":{"name":"rm_demo","path":"rooms/rm_demo/rm_demo.yy",},"order":0,},
   ],
   "Options": [
@@ -34,6 +36,9 @@
     {"folderPath":"folders/Objects.yy","order":9,"resourceVersion":"1.0","name":"Objects","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Rooms.yy","order":10,"resourceVersion":"1.0","name":"Rooms","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Scripts/DEMO.yy","order":2,"resourceVersion":"1.0","name":"DEMO","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/Objects/DEMO.yy","order":4,"resourceVersion":"1.0","name":"DEMO","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/Rooms/DEMO.yy","order":1,"resourceVersion":"1.0","name":"DEMO","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/Sprites/DEMO.yy","order":1,"resourceVersion":"1.0","name":"DEMO","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":461609314234257646,"resourceVersion":"1.0","name":"audiogroup_default","resourceType":"GMAudioGroup",},

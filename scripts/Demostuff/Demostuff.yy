@@ -6,7 +6,7 @@
     "path": "folders/Scripts/DEMO.yy",
   },
   "resourceVersion": "1.0",
-  "name": "demo_enums",
+  "name": "Demostuff",
   "tags": [],
   "resourceType": "GMScript",
 }
