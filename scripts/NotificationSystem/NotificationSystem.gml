@@ -1,5 +1,5 @@
 /**
-*	GMS 2.3+ NotificationSystem | v1.0.0
+*	GMS 2.3+ NotificationSystem | v1.0.1
 *
 *
 *	Struct(s):
