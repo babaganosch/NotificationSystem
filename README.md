@@ -41,7 +41,7 @@ receiver.add(3, function() {
 });
 ```
 
-* You can also bind an empty callback to a message, in order to only react to messages which includes a callback.
+* You can also bind an empty callback to a message in order to only react to messages which includes a callback.
 
 ```gml
 receiver.add("hello");
