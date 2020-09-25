@@ -47,7 +47,7 @@ receiver.add(3, function() {
 receiver.add("hello");
 ```
 
-* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast()`. Messages broadcasted can contain a callback, which will trigger after the callback bound on the receiver end.
+* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast()`. Messages broadcasted can contain a callback, which will trigger AFTER the callback bound on the receiver end.
 
 ```gml
 broadcast(MESSAGES.death);
