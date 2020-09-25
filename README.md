@@ -40,3 +40,19 @@ receiver.add(3, function() {
     show_debug_message("Message 3 received!");
 });
 ```
+
+* You can also bind an empty callback to a message, in order to only react to messages which includes a callback.
+
+```gml
+receiver.add("hello");
+```
+
+* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast`. Messages broadcasted can contain a callback, which will trigger after the callback bound on the receiver end.
+
+```gml
+broadcast(MESSAGES.death);
+
+broadcast("hello", function() {
+    show_debug_message("hello, world!");
+});
+```
