@@ -60,6 +60,6 @@ broadcast("hello", function() {
 * Don't forget to unsubscribe to the notification bus when deleting an object that is subscribed. This is performed by simply calling the function `unsubscribe()`, preferably in the cleanup event of the object.
 
 ```gml
-//desc Don't waste time trying to send me any new messages. I'm not home!
+// Don't waste time trying to send me any new messages. I'm not home!
 unsubscribe();
 ```
