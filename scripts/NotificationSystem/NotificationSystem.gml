@@ -32,8 +32,8 @@ function NotificationSystem() constructor {
 	static __subscribe__ = function(_id) {
 		if (is_undefined(_id)) _id = other;
 		for (var _i = 0; _i < _size; _i++)
-			if (_subscribers[_i] == _i) return;
-		_subscribers[_i] = _id;
+			if (_subscribers[_i] == _id) return;
+		_subscribers[_size] = _id;
 		_size++;
 	}
 	

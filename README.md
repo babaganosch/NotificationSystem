@@ -20,7 +20,7 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 
 * In the Create event of an object, create a variable holding a new instance of `Receiver`. In this same event, call the function subscribe(). This object is now ready to receive messages over the notification bus.
 
-* In order to react to messages sent over the bus, you can bind callbacks to messages with the function `add()`. The messages can be of any type, such as enums, numbers, strings etc.
+* In order to react to messages sent over the bus you bind callbacks to messages with the function `add()`. The messages can be of any type, such as enums, numbers, strings etc.
 
 ```gml
 // Initializing the listener
@@ -40,7 +40,7 @@ receiver.add(3, function() {
 });
 ```
 
-* You can also bind an empty callback to a message in order to only react to messages which includes a callback.
+* You can also bind an empty callback to a message, in order to only react to messages which includes a callback.
 
 ```gml
 receiver.add("hello");
