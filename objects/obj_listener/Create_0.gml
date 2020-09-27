@@ -5,8 +5,8 @@ receiver.add(MESSAGES.hello, function() {
 	ConsoleMessage("Received message 'hello'!");
 });
 
-receiver.add(MESSAGES.world, function() {
-	ConsoleMessage("Received message 'world'!");
+receiver.add(MESSAGES.world, function(_data) {
+	ConsoleMessage(_data);
 });
 
 receiver.add(MESSAGES.foo, function() {

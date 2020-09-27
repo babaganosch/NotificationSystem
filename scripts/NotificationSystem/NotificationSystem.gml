@@ -1,22 +1,22 @@
 /**
-*	GMS 2.3+ NotificationSystem | v1.0.1
+*	GMS 2.3+ NotificationSystem | v1.1.0
 *
 *
 *	Struct(s):
 *		> NotificationSystem()
 *		> Receiver()
-*			- add(message, callback)
+*			- add(message, [callback])
 *			- remove(message)
 *
 *
 *	Function(s):
 *		> subscribe([id])
 *		> unsubscribe([id])
-*		> broadcast(message, [callback])
+*		> broadcast(message, [callback, data])
 *
 *
-*	Author: Lars Andersson | @babaganosch
-*						   | github.com/babaganosch/NotificationSystem
+*	Author: Lars Andersson	| @babaganosch
+*							| github.com/babaganosch/NotificationSystem
 */
 global.__notifications__ = new NotificationSystem();
 
@@ -27,7 +27,7 @@ function NotificationSystem() constructor {
 	_size = 0;
 	
 	/// @func		__subscribe__([id])
-	/// @param		{real} [id]				Id of the instance to subscribe | Default: id of the caller
+	/// @param		{real}	[id]			Id of the instance to subscribe | Default: id of the caller
 	/// @returns	N/A
 	static __subscribe__ = function(_id) {
 		if (is_undefined(_id)) _id = other;
@@ -38,7 +38,7 @@ function NotificationSystem() constructor {
 	}
 	
 	/// @func		__unsubscribe__([id])
-	/// @param		{real} [id]				Id of the instance to unsubscribe | Default: id of the caller
+	/// @param		{real}	[id]			Id of the instance to unsubscribe | Default: id of the caller
 	/// @returns	N/A
 	static __unsubscribe__ = function(_id) {
 		if (is_undefined(_id)) _id = other;
@@ -56,41 +56,49 @@ function NotificationSystem() constructor {
 		_size = _j;
 	}
 	
-	/// @func		__broadcast__(message, [callback])
-	/// @param		{enum} message			Message to broadcast to the receivers
-	/// @param		{func} [callback]		Additional callback | Default: undefined
+	/// @func		__broadcast__(message, [callback, data])
+	/// @param		{enum}	message			Message to broadcast to the receivers
+	/// @param		{func}	[callback]		Additional callback | Default: undefined
+	/// @param		{any}	[data]			Data given to callback on receiver side | Default: -1
 	/// @returns	N/A
-	static __broadcast__ = function(_msg, _cb) {
+	static __broadcast__ = function(_msg, _cb, _data) {
 		for (var _i = 0; _i < _size; _i++)
 		{
 			if (instance_exists(_subscribers[_i]) && 
 				variable_instance_exists(_subscribers[_i], "__notificationsReceiver__"))
-				_subscribers[_i].__notificationsReceiver__.__receive__(_msg, _cb);
+				_subscribers[_i].__notificationsReceiver__.__receive__(_msg, _cb, _data);
 		}
 	}
 	
 }
 
 /// @func		subscribe([id])
-/// @param		{real} [id]				Id of the instance to subscribe | Default: id of the caller
+/// @param		{real}	[id]			Id of the instance to subscribe | Default: id of the caller
 /// @returns	N/A
 function subscribe(_id) {
 	global.__notifications__.__subscribe__(argument[0]);
 }
 
 /// @func		unsubscribe([id])
-/// @param		{real} [id]				Id of the instance to unsubscribe | Default: id of the caller
+/// @param		{real}	[id]			Id of the instance to unsubscribe | Default: id of the caller
 /// @returns	N/A
 function unsubscribe(_id) {
 	global.__notifications__.__unsubscribe__(argument[0]);
 }
 
-/// @func		broadcast(message, [callback])
-/// @param		{enum} message			Message to broadcast to the receivers
-/// @param		{func} [callback]		Callback function | Default: undefined
+/// @func		broadcast(message, [callback, data])
+/// @param		{enum}	message			Message to broadcast to the receivers
+/// @param		{func}	[callback]		Callback function | Default: undefined
+/// @param		{any}	[data]			Data given to callback on receiver side | Default: -1
 /// @returns	N/A
-function broadcast(_msg, _cb) {
-	global.__notifications__.__broadcast__(_msg, argument[1]);
+function broadcast(_msg, _cb, _data) {
+	if (is_undefined(_data)) _data = -1;
+	if (!is_undefined(_cb) && !is_method(_cb)) 
+	{
+		_data = _cb;
+		_cb = undefined;
+	}
+	global.__notifications__.__broadcast__(argument[0], _cb, _data);
 }
 
 
@@ -108,21 +116,21 @@ function Receiver() constructor {
 	}
 	variable_instance_set(other, "__notificationsReceiver__", self);
 	
-	/// @func		add(message, callback)
-	/// @param		{enum} message			Message to listen for
-	/// @param		{func} callback			Callback function to run when message received
+	/// @func		add(message, [callback])
+	/// @param		{enum}	message			Message to listen for
+	/// @param		{func}	[callback]		Callback function to run when message received
 	/// @returns	N/A
 	static add = function(_event, _cb) {
 		_events[_size] = {
-			event: _event,
+			event: argument[0],
 			callback: _cb
 		}
 		_size++;
 	}
 	
 	/// @func		remove(message, [trigger])
-	/// @param		{enum} message			Message to stop listening for
-	/// @param		{bool} [trigger]		Run callback once before deletion | Default: false
+	/// @param		{enum}	message			Message to stop listening for
+	/// @param		{bool}	[trigger]		Run callback once before deletion | Default: false
 	/// @returns	N/A
 	static remove = function(_event, _trigger) {
 		var _newEvents = [];
@@ -135,24 +143,25 @@ function Receiver() constructor {
 				_j++;
 			} else
 			{
-				if (!is_undefined(_trigger) && _trigger) _events[_i].callback();
+				if (!is_undefined(_trigger) && argument[1]) _events[_i].callback();
 			}
 		}
 		_events = _newEvents;
 		_size = _j;
 	}
 	
-	/// @func		__receive__(message, [callback])
-	/// @param		{enum} message			Message to receive
-	/// @param		{func} [callback]		Additional callback to run | Default: undefined
+	/// @func		__receive__(message, callback, data)
+	/// @param		{enum}	message			Message to receive
+	/// @param		{func}	callback		Additional callback to run
+	/// @param		{any}	data			Data given to callback on receiver side
 	/// @returns	N/A
-	static __receive__ = function(_msg, _cb) {
+	static __receive__ = function(_msg, _cb, _data) {
 		for (var _i = 0; _i < _size; _i++)
 		{
 			if (_events[_i].event == _msg) 
 			{
 				var _fn = _events[_i].callback;
-				if (!is_undefined(_fn)) _fn();
+				if (!is_undefined(_fn)) _fn(_data);
 				if (!is_undefined(_cb)) method(_parent, _cb)();
 			}
 		}
