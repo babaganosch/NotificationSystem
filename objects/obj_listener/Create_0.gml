@@ -17,7 +17,6 @@ receiver.add(MESSAGES.bar);
 
 
 
-
 #region -- DEMO ONLY --
 
 enum MESSAGES {
