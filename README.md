@@ -54,7 +54,7 @@ subscribe(100010, "enemies");
 receiver.add("hello");
 ```
 
-* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast()`. Messages broadcasted can contain a callback, which will trigger *after* the callback bound on the receiver end. It is also possible to send an argument with the message, which the callback bound on the receiver end will receive.
+* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast()`. Messages broadcasted can contain a callback, which will trigger **after** the callback bound on the receiver end. It is also possible to send an argument with the message, which the callback bound on the receiver end will receive.
 
 ```gml
 broadcast(MESSAGES.death);
