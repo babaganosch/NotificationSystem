@@ -4,7 +4,7 @@
 *
 *	Struct(s):
 *		> NotificationSystem()
-*		> Receiver()
+*		> Receiver(subscribe)
 *			- add(message, [callback])
 *			- remove(message)
 *
@@ -23,7 +23,7 @@ global.__notifications__ = new NotificationSystem();
 #macro __NOTIFICATIONS_SAFE true
 
 
-/// @struct	  NotificationSystem()
+/// @struct		NotificationSystem()
 function NotificationSystem() constructor {
 	
 	_subscribers = [];
@@ -189,8 +189,9 @@ function broadcast_channel(_msg, _channel, _cb, _data) {
 }
 
 
-/// @struct	  Receiver()
-function Receiver() constructor {
+/// @struct		Receiver(subscribe)
+/// @param		{bool|string}	subscribe	Auto subscribe | Default: true
+function Receiver(_sub) constructor {
 	
 	_events = [];
 	_size = 0;
@@ -201,6 +202,15 @@ function Receiver() constructor {
 		show_error(_message, true);
 	}
 	variable_instance_set(other, "__notificationsReceiver__", self);
+	
+	if (!is_undefined(_sub))
+	{
+		if (is_string(_sub))
+			subscribe(other, argument[0]);
+	} else
+	{
+		subscribe(other);
+	}
 	
 	/// @func		add(message, [callback])
 	/// @param		{enum}	message			Message to listen for

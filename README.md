@@ -1,4 +1,4 @@
-<h1 align="center">GMS 2.3+ NotificationSystem | v1.0.1</h1>
+<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.0</h1>
 <p align="center"><a href="https://twitter.com/Babaganosch">@babaganosch</a></p>
 <p align="center">Download: <a href="https://babaganosch.itch.io/notificationsystem">itch</a></p>
 
