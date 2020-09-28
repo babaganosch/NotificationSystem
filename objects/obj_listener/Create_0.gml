@@ -1,4 +1,3 @@
-subscribe();
 receiver = new Receiver();
 
 receiver.add(MESSAGES.hello, function() {
