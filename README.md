@@ -18,17 +18,16 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 
 ## Usage
 
-* In the Create event of an object, create a variable holding a new instance of `Receiver`. In this same event, call the function subscribe(). This object is now ready to receive messages over the notification bus.
+* In the Create event of an object, create a variable holding a new instance of `Receiver`. This object is now ready to receive messages over the notification bus.
 
 * In order to react to messages sent over the bus you bind callbacks to messages with the function `add()`. The messages can be of any type, such as enums, numbers, strings etc.
 
 ```gml
 // Initializing the listener
-subscribe();
 receiver = new Receiver();
 
-receiver.add("Monster killed", function() {
-    increase_score();
+receiver.add("Monster killed", function(amount) {
+    increase_score(amount);
 });
 
 receiver.add(MESSAGES.death, function() {
@@ -40,20 +39,33 @@ receiver.add(3, function() {
 });
 ```
 
+* It is also possible to subscribe to specific channels
+```gml
+// Subscribe to channel enemies
+subscribe("enemies");
+
+// Subscribe instance 100010 to channel enemies
+subscribe(100010, "enemies");
+```
+
 * You can also bind an empty callback to a message, in order to only react to messages which includes a callback.
 
 ```gml
 receiver.add("hello");
 ```
 
-* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast()`. Messages broadcasted can contain a callback, which will trigger AFTER the callback bound on the receiver end.
+* Any object can broadcast a message on the notification bus, this is performed with the function `broadcast()`. Messages broadcasted can contain a callback, which will trigger *after* the callback bound on the receiver end. It is also possible to send an argument with the message, which the callback bound on the receiver end will receive.
 
 ```gml
 broadcast(MESSAGES.death);
 
+broadcast("Monster killed", 10);
+
 broadcast("hello", function() {
     show_debug_message("hello, world!");
 });
+
+broadcast_channel("hello", "enemies");
 ```
 
 * Don't forget to unsubscribe to the notification bus when deleting an object that is subscribed. This is performed by simply calling the function `unsubscribe()`, preferably in the cleanup event of the object.
@@ -62,3 +74,7 @@ broadcast("hello", function() {
 // Don't waste time trying to send me any new messages. I'm not home!
 unsubscribe();
 ```
+
+## Documentation
+
+Check out the [wiki](https://github.com/babaganosch/NotificationSystem/wiki) for further documentation.
