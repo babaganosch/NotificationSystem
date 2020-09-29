@@ -12,10 +12,6 @@ You only need the 'NotificationSystem' script, but this whole repository contain
   <img src="https://raw.githubusercontent.com/babaganosch/open_storage/master/notifications.gif">
 </p>
 
-## Installation
-
-* Copy the `NotificationSystem` script into your project.
-
 ## Changelog 1.2.1
 
 * Added support for subscribing to multiple channels at once, example below
@@ -25,6 +21,10 @@ receiver = new Receiver(["controllers", "effects", "channel5"]);
 // or
 subscribe(["controllers", "effects", "channel5"]);
 ```
+
+## Installation
+
+* Copy the `NotificationSystem` script into your project.
 
 ## Usage
 
