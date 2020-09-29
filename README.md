@@ -4,7 +4,7 @@
 
 ---
 
-**NotificationSystem** is an observer pattern framework for GameMaker Studio 2.3+. It's extremly simple to setup and easy to use.
+**NotificationSystem** is a lightweight signals framework for GameMaker Studio 2.3+. It's extremly simple to setup and easy to use.
 
 You only need the 'NotificationSystem' script, but this whole repository contains a demo project showcasing a simple implementation.
 
