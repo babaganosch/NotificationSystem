@@ -1,4 +1,4 @@
-<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.0</h1>
+<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.1</h1>
 <p align="center"><a href="https://twitter.com/Babaganosch">@babaganosch</a></p>
 <p align="center">Download: <a href="https://babaganosch.itch.io/notificationsystem">itch</a></p>
 
@@ -15,6 +15,16 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 ## Installation
 
 * Copy the `NotificationSystem` script into your project.
+
+## Changelog 1.2.1
+
+* Added support for subscribing to multiple channels at once, example below
+* Fixed bug when calling `subscribe("channel")` could crash
+```gml
+receiver = new Receiver(["controllers", "effects", "channel5"]);
+// or
+subscribe(["controllers", "effects", "channel5"]);
+```
 
 ## Usage
 
