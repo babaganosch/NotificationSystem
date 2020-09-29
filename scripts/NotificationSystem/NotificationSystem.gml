@@ -1,10 +1,10 @@
 /**
-*	GMS 2.3+ NotificationSystem | v1.2.0
+*	GMS 2.3+ NotificationSystem | v1.2.1
 *
 *
 *	Struct(s):
 *		> NotificationSystem()
-*		> Receiver(subscribe)
+*		> Receiver([subscribe])
 *			- add(message, [callback])
 *			- remove(message)
 *
@@ -34,6 +34,15 @@ function NotificationSystem() constructor {
 	/// @param		{real}		id			Id of the instance to subscribe
 	/// @returns	N/A
 	static __subscribe_channel__ = function(_channel, _id) {
+        
+        if (is_array(_channel))
+        {
+            for (var _i = 0; _i < array_length(_channel); _i++)
+            {
+                __subscribe_channel__(_channel[_i], _id);
+            }
+            return;
+        }
 		
 		var _list = variable_struct_get(_channels, _channel);
 		if (is_undefined(_list)) variable_struct_set(_channels, _channel, [ _id ]);
@@ -143,8 +152,12 @@ function NotificationSystem() constructor {
 /// @param		{string}	[channel]	Name of the channel	| Default: no channel
 /// @returns	N/A
 function subscribe(_id, _channel) {
-	if (is_string(argument[0])) _channel = _id;
-	if (is_undefined(argument[0])) _id = self;
+    if (is_undefined(argument[0])) _id = self;
+	else if (is_string(argument[0]) || is_array(argument[0]))
+    {
+        _channel = _id;
+        _id = self;
+    }
 	global.__notifications__.__subscribe__(_id);
 	if (!is_undefined(_channel))
 		global.__notifications__.__subscribe_channel__(_channel, _id);
@@ -189,8 +202,8 @@ function broadcast_channel(_msg, _channel, _cb, _data) {
 }
 
 
-/// @struct		Receiver(subscribe)
-/// @param		{bool|string}	subscribe	Auto subscribe | Default: true
+/// @struct		Receiver([subscribe])
+/// @param		{bool|string}	[subscribe]	Auto subscribe | Default: true
 function Receiver(_sub) constructor {
 	
 	_events = [];
@@ -205,7 +218,7 @@ function Receiver(_sub) constructor {
 	
 	if (!is_undefined(_sub))
 	{
-		if (is_string(_sub))
+		if (is_string(_sub) || is_array(_sub))
 			subscribe(other, argument[0]);
 	} else
 	{
