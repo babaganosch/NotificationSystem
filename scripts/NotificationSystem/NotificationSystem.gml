@@ -10,16 +10,16 @@
 *
 *
 *	Function(s):
-*       > channel_exists(channel)
-*       > log_channels()
+*		> channel_exists(channel)
+*		> log_channels()
 *		> subscribe([id, channel])
 *		> unsubscribe([id, channel])
 *		> broadcast(message, [callback, data])
 *		> broadcast_channel(message, channel, [callback, data])
 *
 *
-*	Author: Lars Andersson	| @babaganosch
-*							| github.com/babaganosch/NotificationSystem
+*	Author: Lars Andersson  | @babaganosch
+*	                        | github.com/babaganosch/NotificationSystem
 */
 global.__notifications__ = new NotificationSystem();
 #macro __NOTIFICATIONS_SAFE true
