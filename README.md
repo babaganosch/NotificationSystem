@@ -12,8 +12,12 @@ You only need the 'NotificationSystem' script, but this whole repository contain
   <img src="https://raw.githubusercontent.com/babaganosch/open_storage/master/notifications.gif">
 </p>
 
-## Changelog v1.2.1
+## Changelog
 
+**v1.2.2**
+* Added function `log_channels()`
+
+**v1.2.1**
 * Added support for subscribing to multiple channels at once, example below
 * Fixed bug when calling `subscribe("channel")` could crash
 ```gml

@@ -1,5 +1,5 @@
 /**
-*	GMS 2.3+ NotificationSystem | v1.2.1
+*	GMS 2.3+ NotificationSystem | v1.2.2
 *
 *
 *	Struct(s):
@@ -10,6 +10,7 @@
 *
 *
 *	Function(s):
+*       > log_channels()
 *		> subscribe([id, channel])
 *		> unsubscribe([id, channel])
 *		> broadcast(message, [callback, data])
@@ -144,7 +145,44 @@ function NotificationSystem() constructor {
 				_list[_i].__notificationsReceiver__.__receive__(_msg, _cb, _data);
 		}
 	}
+    
+    /// @func       __log_array_contents__(array)
+    /// @param      {array}     array       Array to iterate    
+    /// @returns    string
+    static __log_array_contents__ = function(_array) {
+        var _len = array_length(_array);
+        var _string = string(_len) + " intsances [ ";
+        for (var _i = 0; _i < _len; _i++)
+        {
+            if (_i != 0) _string += ", ";
+            _string += string(object_get_name(_array[_i].object_index)) + " " + string(_array[_i].id);
+        }
+        _string += " ]";
+        return _string;
+    }
+    
+    /// @func       __log_channels__()
+    /// @returns N/A
+    static __log_channels__ = function() {
+        show_debug_message("");
+        show_debug_message("-- SUBSCRIBERS --");
+        show_debug_message("no channel:" + __log_array_contents__(_subscribers));
+        var _names = variable_struct_get_names(_channels);
+        for (var _i = 0; _i < array_length(_names); _i++)
+        {
+            var _list = variable_struct_get(_channels, _names[_i]);
+            var _string = _names[_i] + ": " + __log_array_contents__(_list);
+            show_debug_message(_string);
+        }
+        show_debug_message("");
+    }
 	
+}
+
+/// @func       log_channels()
+/// @returns    N/A
+function log_channels() {
+    global.__notifications__.__log_channels__();
 }
 
 /// @func		subscribe([id, channel])
