@@ -10,6 +10,7 @@
 *
 *
 *	Function(s):
+*       > channel_exists(channel)
 *       > log_channels()
 *		> subscribe([id, channel])
 *		> unsubscribe([id, channel])
@@ -131,7 +132,9 @@ function NotificationSystem() constructor {
 			_list = variable_struct_get(_channels, _channel);
 			if (is_undefined(_list))
 			{
-				if (__NOTIFICATIONS_SAFE) show_error("Channel '" + _channel + "' does not exist!", true);	
+                var _error_msg = "Channel '" + _channel + "' does not exist!";
+				if (__NOTIFICATIONS_SAFE) show_error(_error_msg, true);
+                else show_debug_message(_error_msg);
 			}
 		} else
 		{
@@ -148,7 +151,7 @@ function NotificationSystem() constructor {
     
     /// @func       __log_array_contents__(array)
     /// @param      {array}     array       Array to iterate    
-    /// @returns    string
+    /// @returns    {string}
     static __log_array_contents__ = function(_array) {
         var _len = array_length(_array);
         var _string = string(_len) + " intsances [ ";
@@ -176,7 +179,20 @@ function NotificationSystem() constructor {
         }
         show_debug_message("");
     }
-	
+    
+    /// @func       __channel_exists__(channel)
+    /// @param      {string}    channel     Name of the channel to check for
+    /// @returns    {bool}
+	static __channel_exists__ = function(_channel) {
+        return !is_undefined(variable_struct_get(_channels, _channel));
+    }
+}
+
+/// @func       channel_exists(channel)
+/// @param      {string}    channel     Name of the channel to check for
+/// @returns    {bool}
+function channel_exists(_channel) {
+    return global.__notifications__.__channel_exists__(_channel);
 }
 
 /// @func       log_channels()

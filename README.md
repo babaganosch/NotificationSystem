@@ -16,6 +16,7 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 
 **v1.2.2**
 * Added function `log_channels()`
+* Added function `channel_exists(name)`
 
 **v1.2.1**
 * Added support for subscribing to multiple channels at once, example below
