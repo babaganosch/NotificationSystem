@@ -15,7 +15,7 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 ## Changelog
 
 **v1.2.3**
-* Instances can now decide if they want to listen to the global channel or just listening for messages in their own specific channels they subscribe to. To subscribe to the global channel you can either leave subscribe() blank or use subscribe(global)
+* Instances can now decide if they want to listen to the global channel or just listening for messages in their own specific channels they subscribe to. To subscribe to the global channel you can either leave `subscribe()` blank or use `subscribe(global)`
 * The global keyword can also be used in an array, for example `subscribe([global, "channel_1"])`
 * Added alias `on()` for `add()`
 * Many thanks to @FaultyFunctions for these changes
