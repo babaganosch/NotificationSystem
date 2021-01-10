@@ -24,7 +24,6 @@
 global.__notifications__ = new NotificationSystem();
 #macro __NOTIFICATIONS_SAFE true
 
-
 /// @struct		NotificationSystem()
 function NotificationSystem() constructor {
 	
@@ -44,6 +43,11 @@ function NotificationSystem() constructor {
             }
             return;
         }
+		
+		if (_channel == global) {
+			__subscribe__(_id);
+			return;
+		}
 		
 		var _list = variable_struct_get(_channels, _channel);
 		if (is_undefined(_list)) variable_struct_set(_channels, _channel, [ _id ]);
@@ -101,6 +105,20 @@ function NotificationSystem() constructor {
 	/// @param		{real}		id			Id of the instance to unsubscribe
 	/// @returns	N/A
 	static __unsubscribe_channel__ = function(_channel, _id) {
+		if (is_array(_channel))
+        {
+            for (var _i = 0; _i < array_length(_channel); _i++)
+            {
+                __unsubscribe_channel__(_channel[_i], _id);
+            }
+            return;
+        }
+		
+		if (_channel == global) {
+			__unsubscribe__(_id);
+			return;
+		}
+		
 		var _list = variable_struct_get(_channels, _channel);
 		if (is_undefined(_list)) return;
 		
@@ -113,12 +131,15 @@ function NotificationSystem() constructor {
 			}
 		}
 		variable_struct_set(_channels, _channel, _newList);
+		if (array_length(variable_struct_get(_channels, _channel)) == 0) {
+			variable_struct_remove(_channels, _channel);
+		}
 	}
 	
 	/// @param		{enum}	 message		Message to broadcast to the receivers
 	/// @param		{string} channel		Name of the channel
 	/// @param		{func}	 callback		Additional callback
-	/// @param		{any}	 data			Data given to callback on receiver side
+	/// @param		{any}	 data			Data given to callback on receiver side
 	/// @returns	N/A
 	static __broadcast__ = function(_msg, _channel, _cb, _data) {
 		var _list;
@@ -197,16 +218,19 @@ function log_channels() {
 /// @param		{real}		[id]		Id of the instance to subscribe | Default: id of the caller
 /// @param		{string}	[channel]	Name of the channel	| Default: no channel
 /// @returns	N/A
-function subscribe(_id, _channel) {
+function subscribe(_id, _channel) {
     if (is_undefined(argument[0])) _id = self;
-	else if (is_string(argument[0]) || is_array(argument[0]))
+	else if (is_string(argument[0]) || is_array(argument[0]) || argument[0] == global)
     {
         _channel = _id;
         _id = self;
     }
-	global.__notifications__.__subscribe__(_id);
-	if (!is_undefined(_channel))
+	
+	if (!is_undefined(_channel) and _channel != global) {
 		global.__notifications__.__subscribe_channel__(_channel, _id);
+	} else {
+		global.__notifications__.__subscribe__(_id);
+	}
 }
 
 /// @func		unsubscribe([id, channel])
@@ -214,17 +238,24 @@ function subscribe(_id, _channel) {
 /// @param		{string}	[channel]	Name of the channel	| Default: no channel
 /// @returns	N/A
 function unsubscribe(_id, _channel) {
-	if (is_string(argument[0])) _channel = _id;
-	if (is_undefined(argument[0])) _id = self;
-	global.__notifications__.__unsubscribe__(_id);
-	if (!is_undefined(_channel))
+    if (is_undefined(argument[0])) _id = self;
+	else if (is_string(argument[0]) || is_array(argument[0]) || argument[0] == global)
+    {
+        _channel = _id;
+        _id = self;
+    }
+	
+	if (!is_undefined(_channel) and _channel != global) {
 		global.__notifications__.__unsubscribe_channel__(_channel, _id);
+	} else {
+		global.__notifications__.__unsubscribe__(_id);
+	}
 }
 
 /// @func		broadcast(message, [callback, data])
 /// @param		{enum}	message			Message to broadcast to the receivers
 /// @param		{func}	[callback]		Callback function | Default: undefined
-/// @param		{any}	[data]			Data given to callback on receiver side | Default: -1
+/// @param		{any}	[data]			Data given to callback on receiver side | Default: -1
 /// @returns	N/A
 function broadcast(_msg, _cb, _data) {
 	broadcast_channel(argument[0], undefined, _cb, _data);
@@ -234,7 +265,7 @@ function broadcast(_msg, _cb, _data) {
 /// @param		{enum}		message		Message to broadcast to the receivers
 /// @param		{string}	channel		Name of the channel
 /// @param		{func}		[callback]	Callback function | Default: undefined
-/// @param		{any}		[data]		Data given to callback on receiver side | Default: -1
+/// @param		{any}		[data]		Data given to callback on receiver side | Default: -1
 /// @returns	N/A
 function broadcast_channel(_msg, _channel, _cb, _data) {
 	
@@ -264,23 +295,11 @@ function Receiver(_sub) constructor {
 	
 	if (!is_undefined(_sub))
 	{
-		if (is_string(_sub) || is_array(_sub))
+		if (is_string(_sub) || is_array(_sub) || _sub == global)
 			subscribe(other, argument[0]);
 	} else
 	{
 		subscribe(other);
-	}
-	
-	/// @func		add(message, [callback])
-	/// @param		{enum}	message			Message to listen for
-	/// @param		{func}	[callback]		Callback function to run when message received
-	/// @returns	N/A
-	static add = function(_event, _cb) {
-		_events[_size] = {
-			event: argument[0],
-			callback: _cb
-		}
-		_size++;
 	}
 	
 	/// @func		on(message, [callback])
@@ -288,7 +307,11 @@ function Receiver(_sub) constructor {
 	/// @param		{func}	[callback]		Callback function to run when message received
 	/// @returns	N/A
 	static on = function(_event, _cb) {
-		add(_event, _cb);
+		_events[_size] = {
+			event: argument[0],
+			callback: _cb
+		}
+		_size++;
 	}
 	
 	/// @func		remove(message, [trigger])
@@ -315,7 +338,7 @@ function Receiver(_sub) constructor {
 	
 	/// @param		{enum}	message			Message to receive
 	/// @param		{func}	callback		Additional callback to run
-	/// @param		{any}	data			Data given to callback on receiver side
+	/// @param		{any}	data			Data given to callback on receiver side
 	/// @returns	N/A
 	static __receive__ = function(_msg, _cb, _data) {
 		for (var _i = 0; _i < _size; _i++)
@@ -329,3 +352,4 @@ function Receiver(_sub) constructor {
 		}
 	}
 }
+
