@@ -31,7 +31,6 @@ function NotificationSystem() constructor {
 	_subscribers = [];
 	_channels = {};
 	
-	/// @func		__subscribe_channel__(channel, id)
 	/// @param		{string}	channel		Name of the channel
 	/// @param		{real}		id			Id of the instance to subscribe
 	/// @returns	N/A
@@ -60,7 +59,6 @@ function NotificationSystem() constructor {
 		}
 	}
 	
-	/// @func		__subscribe__(id)
 	/// @param		{real}	id				Id of the instance to subscribe
 	/// @returns	N/A
 	static __subscribe__ = function(_id) {
@@ -70,7 +68,6 @@ function NotificationSystem() constructor {
 		_subscribers[_size] = _id;
 	}
 	
-	/// @func		__unsubscribe__(id)
 	/// @param		{real}	id				Id of the instance to unsubscribe
 	/// @returns	N/A
 	static __unsubscribe__ = function(_id) {
@@ -100,7 +97,6 @@ function NotificationSystem() constructor {
 		}
 	}
 	
-	/// @func		__unsubscribe_channel__(channel, id)
 	/// @param		{string}	channel		Name of the channel
 	/// @param		{real}		id			Id of the instance to unsubscribe
 	/// @returns	N/A
@@ -119,7 +115,6 @@ function NotificationSystem() constructor {
 		variable_struct_set(_channels, _channel, _newList);
 	}
 	
-	/// @func		__broadcast__(message, [callback, data])
 	/// @param		{enum}	 message		Message to broadcast to the receivers
 	/// @param		{string} channel		Name of the channel
 	/// @param		{func}	 callback		Additional callback
@@ -149,7 +144,6 @@ function NotificationSystem() constructor {
 		}
 	}
     
-    /// @func       __log_array_contents__(array)
     /// @param      {array}     array       Array to iterate    
     /// @returns    {string}
     static __log_array_contents__ = function(_array) {
@@ -164,7 +158,6 @@ function NotificationSystem() constructor {
         return _string;
     }
     
-    /// @func       __log_channels__()
     /// @returns N/A
     static __log_channels__ = function() {
         show_debug_message("");
@@ -180,7 +173,6 @@ function NotificationSystem() constructor {
         show_debug_message("");
     }
     
-    /// @func       __channel_exists__(channel)
     /// @param      {string}    channel     Name of the channel to check for
     /// @returns    {bool}
 	static __channel_exists__ = function(_channel) {
@@ -291,6 +283,14 @@ function Receiver(_sub) constructor {
 		_size++;
 	}
 	
+	/// @func		on(message, [callback])
+	/// @param		{enum}	message			Message to listen for
+	/// @param		{func}	[callback]		Callback function to run when message received
+	/// @returns	N/A
+	static on = function(_event, _cb) {
+		add(_event, _cb);
+	}
+	
 	/// @func		remove(message, [trigger])
 	/// @param		{enum}	message			Message to stop listening for
 	/// @param		{bool}	[trigger]		Run callback once before deletion | Default: false
@@ -313,7 +313,6 @@ function Receiver(_sub) constructor {
 		_size = _j;
 	}
 	
-	/// @func		__receive__(message, callback, data)
 	/// @param		{enum}	message			Message to receive
 	/// @param		{func}	callback		Additional callback to run
 	/// @param		{any}	data			Data given to callback on receiver side
