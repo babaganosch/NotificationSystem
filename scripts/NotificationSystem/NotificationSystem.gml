@@ -254,7 +254,7 @@ function Receiver(_sub) constructor {
 	
 	_events = [];
 	_size = 0;
-	_parent = other;
+	_parent = other.id;
 	
 	if (variable_instance_exists(other, "__notificationsReceiver__")) { 
 		var _message = "-- WARNING --\nObject " + string(object_get_name(other.object_index) + ": Notification receiver already exists.");
