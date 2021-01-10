@@ -1,3 +1,10 @@
+enum MESSAGES {
+	hello,
+	world,
+	foo,
+	bar
+}
+
 receiver = new Receiver();
 
 receiver.add(MESSAGES.hello, function() {
@@ -14,16 +21,8 @@ receiver.add(MESSAGES.foo, function() {
 
 receiver.add(MESSAGES.bar);
 
-
-
 #region -- DEMO ONLY --
 
-enum MESSAGES {
-	hello,
-	world,
-	foo,
-	bar
-}
 
 function ConsoleMessage(_message) {
 	

@@ -1,4 +1,4 @@
-<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.2</h1>
+<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.3</h1>
 <p align="center"><a href="https://twitter.com/Babaganosch">@babaganosch</a></p>
 <p align="center">Download: <a href="https://babaganosch.itch.io/notificationsystem">itch</a></p>
 
@@ -13,6 +13,12 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 </p>
 
 ## Changelog
+
+**v1.2.3**
+* Instances can now decide if they want to listen to the global channel or just listening for messages in their own specific channels they subscribe to. To subscribe to the global channel you can either leave subscribe() blank or use subscribe(global)
+* The global keyword can also be used in an array, for example `subscribe([global, "channel_1"])`
+* Added alias `on()` for `add()`
+* Many thanks to @FaultyFunctions for these changes
 
 **v1.2.2**
 * Added function `log_channels()`

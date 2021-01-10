@@ -1,11 +1,12 @@
 /**
-*	GMS 2.3+ NotificationSystem | v1.2.2
+*	GMS 2.3+ NotificationSystem | v1.2.3
 *
 *
 *	Struct(s):
 *		> NotificationSystem()
 *		> Receiver([subscribe])
 *			- add(message, [callback])
+*			- on(message, [callback])
 *			- remove(message)
 *
 *
@@ -301,17 +302,25 @@ function Receiver(_sub) constructor {
 	{
 		subscribe(other);
 	}
+    
+    /// @func		add(message, [callback])
+	/// @param		{enum}	message			Message to listen for
+	/// @param		{func}	[callback]		Callback function to run when message received
+	/// @returns	N/A
+	static add = function(_event, _cb) {
+		_events[_size] = {
+			event: argument[0],
+			callback: _cb
+		}
+		_size++;
+	}
 	
 	/// @func		on(message, [callback])
 	/// @param		{enum}	message			Message to listen for
 	/// @param		{func}	[callback]		Callback function to run when message received
 	/// @returns	N/A
 	static on = function(_event, _cb) {
-		_events[_size] = {
-			event: argument[0],
-			callback: _cb
-		}
-		_size++;
+		add(_event, _cb);
 	}
 	
 	/// @func		remove(message, [trigger])
