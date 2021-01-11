@@ -1,11 +1,12 @@
 /**
-*	GMS 2.3+ NotificationSystem | v1.2.3
+*	GMS 2.3+ NotificationSystem | v1.2.4
 *
 *
 *	Struct(s):
 *		> NotificationSystem()
 *		> Receiver([subscribe])
 *			- add(message, [callback])
+*           - on(message, [callback])
 *			- remove(message)
 *
 *
@@ -294,19 +295,19 @@ function Receiver(_sub) constructor {
 	_size = 0;
 	_parent = other.id;
 	
-	if (variable_instance_exists(other.id, "__notificationsReceiver__")) { 
+	if (variable_instance_exists(_parent, "__notificationsReceiver__")) { 
 		var _message = "-- WARNING --\nObject " + string(object_get_name(other.object_index) + ": Notification receiver already exists.");
 		show_error(_message, true);
 	}
-	variable_instance_set(other.id, "__notificationsReceiver__", self);
+	variable_instance_set(_parent, "__notificationsReceiver__", self);
 	
 	if (!is_undefined(_sub))
 	{
 		if (is_string(_sub) || is_array(_sub) || _sub == global)
-			subscribe(other.id, argument[0]);
+			subscribe(_parent, argument[0]);
 	} else
 	{
-		subscribe(other.id);
+		subscribe(_parent);
 	}
 	
 	/// @func		add(message, [channel, callback])
@@ -366,7 +367,8 @@ function Receiver(_sub) constructor {
 	static __receive__ = function(_msg, _channel, _cb, _data) {
 		for (var _i = 0; _i < _size; _i++)
 		{
-			if (_events[_i].event == _msg and (_events[_i].channel == _channel or _events[_i].channel == undefined))
+			if (_events[_i].event == _msg and 
+               (_events[_i].channel == _channel or _events[_i].channel == undefined))
 			{
 				var _fn = _events[_i].callback;
 				if (!is_undefined(_fn)) _fn(_data);
