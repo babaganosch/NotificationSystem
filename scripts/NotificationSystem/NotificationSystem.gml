@@ -6,7 +6,6 @@
 *		> NotificationSystem()
 *		> Receiver([subscribe])
 *			- add(message, [callback])
-*			- on(message, [callback])
 *			- remove(message)
 *
 *
@@ -143,6 +142,13 @@ function NotificationSystem() constructor {
 	/// @param		{any}	 data			Data given to callback on receiver side
 	/// @returns	N/A
 	static __broadcast__ = function(_msg, _channel, _cb, _data) {
+		if (is_array(_channel)) {
+			for (var _i = 0; _i < array_length(_channel); _i++) {
+				__broadcast__(_msg, _channel[_i], _cb, _data);
+			}
+			return;
+		}
+		
 		var _list;
 		if (is_string(_channel))
 		{
@@ -162,7 +168,7 @@ function NotificationSystem() constructor {
 		{
 			if (instance_exists(_list[_i]) && 
 				variable_instance_exists(_list[_i], "__notificationsReceiver__"))
-				_list[_i].__notificationsReceiver__.__receive__(_msg, _cb, _data);
+				_list[_i].__notificationsReceiver__.__receive__(_msg, _channel, _cb, _data);
 		}
 	}
     
@@ -259,14 +265,14 @@ function unsubscribe(_id, _channel) {
 /// @param		{any}	[data]			Data given to callback on receiver side | Default: -1
 /// @returns	N/A
 function broadcast(_msg, _cb, _data) {
-	broadcast_channel(argument[0], undefined, _cb, _data);
+	broadcast_channel(argument[0], global, _cb, _data);
 }
 
 /// @func		broadcast_channel(message, channel, [callback, data])
-/// @param		{enum}		message		Message to broadcast to the receivers
-/// @param		{string}	channel		Name of the channel
-/// @param		{func}		[callback]	Callback function | Default: undefined
-/// @param		{any}		[data]		Data given to callback on receiver side | Default: -1
+/// @param		{enum}			message		Message to broadcast to the receivers
+/// @param		{array/string}	channel		Name(s) of the channel
+/// @param		{func}			[callback]	Callback function | Default: undefined
+/// @param		{any}			[data]		Data given to callback on receiver side | Default: -1
 /// @returns	N/A
 function broadcast_channel(_msg, _channel, _cb, _data) {
 	
@@ -288,39 +294,46 @@ function Receiver(_sub) constructor {
 	_size = 0;
 	_parent = other.id;
 	
-	if (variable_instance_exists(other, "__notificationsReceiver__")) { 
+	if (variable_instance_exists(other.id, "__notificationsReceiver__")) { 
 		var _message = "-- WARNING --\nObject " + string(object_get_name(other.object_index) + ": Notification receiver already exists.");
 		show_error(_message, true);
 	}
-	variable_instance_set(other, "__notificationsReceiver__", self);
+	variable_instance_set(other.id, "__notificationsReceiver__", self);
 	
 	if (!is_undefined(_sub))
 	{
 		if (is_string(_sub) || is_array(_sub) || _sub == global)
-			subscribe(other, argument[0]);
+			subscribe(other.id, argument[0]);
 	} else
 	{
-		subscribe(other);
+		subscribe(other.id);
 	}
-    
-    /// @func		add(message, [callback])
-	/// @param		{enum}	message			Message to listen for
-	/// @param		{func}	[callback]		Callback function to run when message received
+	
+	/// @func		add(message, [channel, callback])
+	/// @param		{enum}		message			Message to listen for
+	/// @param		{string}	[channel]		The channel to listen on
+	/// @param		{func}		[callback]		Callback function to run when message received
 	/// @returns	N/A
-	static add = function(_event, _cb) {
+	static add = function(_event, _channel, _cb) {
+		if (is_method(_channel)) {
+			_cb = _channel;
+			_channel = undefined;
+		}
 		_events[_size] = {
 			event: argument[0],
+			channel: _channel,
 			callback: _cb
 		}
 		_size++;
 	}
 	
-	/// @func		on(message, [callback])
+	/// @func		on(message, [channel, callback])
 	/// @param		{enum}	message			Message to listen for
+	/// @param		{string}	[channel]		The channel to listen on
 	/// @param		{func}	[callback]		Callback function to run when message received
 	/// @returns	N/A
-	static on = function(_event, _cb) {
-		add(_event, _cb);
+	static on = function(_event, _channel, _cb) {
+		add(_event, _channel, _cb);
 	}
 	
 	/// @func		remove(message, [trigger])
@@ -345,14 +358,15 @@ function Receiver(_sub) constructor {
 		_size = _j;
 	}
 	
-	/// @param		{enum}	message			Message to receive
-	/// @param		{func}	callback		Additional callback to run
-	/// @param		{any}	data			Data given to callback on receiver side
+	/// @param		{enum}		message		Message to receive
+	/// @param		{string}	channel		Channel the msg was sent through
+	/// @param		{func}		callback	Additional callback to run
+	/// @param		{any}		data		Data given to callback on receiver side
 	/// @returns	N/A
-	static __receive__ = function(_msg, _cb, _data) {
+	static __receive__ = function(_msg, _channel, _cb, _data) {
 		for (var _i = 0; _i < _size; _i++)
 		{
-			if (_events[_i].event == _msg) 
+			if (_events[_i].event == _msg and (_events[_i].channel == _channel or _events[_i].channel == undefined))
 			{
 				var _fn = _events[_i].callback;
 				if (!is_undefined(_fn)) _fn(_data);
