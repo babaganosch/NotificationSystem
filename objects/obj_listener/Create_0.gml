@@ -7,19 +7,19 @@ enum MESSAGES {
 
 receiver = new Receiver();
 
-receiver.add(MESSAGES.hello, function() {
+receiver.on(MESSAGES.hello, function() {
 	ConsoleMessage("Received message 'hello'!");
 });
 
-receiver.add(MESSAGES.world, function(_data) {
+receiver.on(MESSAGES.world, function(_data) {
 	ConsoleMessage(_data);
 });
 
-receiver.add(MESSAGES.foo, function() {
+receiver.on(MESSAGES.foo, function() {
 	ConsoleMessage("Received message 'foo'! This callback is performed first,");
 });
 
-receiver.add(MESSAGES.bar);
+receiver.on(MESSAGES.bar);
 
 #region -- DEMO ONLY --
 
