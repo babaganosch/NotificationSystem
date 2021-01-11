@@ -367,8 +367,8 @@ function Receiver(_sub) constructor {
 	static __receive__ = function(_msg, _channel, _cb, _data) {
 		for (var _i = 0; _i < _size; _i++)
 		{
-			if (_events[_i].event == _msg and 
-               (_events[_i].channel == _channel or _events[_i].channel == undefined))
+			if (_events[_i].event == _msg && 
+               (_events[_i].channel == _channel || is_undefined(_events[_i].channel)))
 			{
 				var _fn = _events[_i].callback;
 				if (!is_undefined(_fn)) _fn(_data);
