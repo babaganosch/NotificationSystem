@@ -6,7 +6,6 @@
 *		> NotificationSystem()
 *		> Receiver([subscribe])
 *			- add(message, [callback])
-*			- on(message, [callback])
 *			- remove(message)
 *
 *
@@ -143,6 +142,13 @@ function NotificationSystem() constructor {
 	/// @param		{any}	 data			Data given to callback on receiver side
 	/// @returns	N/A
 	static __broadcast__ = function(_msg, _channel, _cb, _data) {
+		if (is_array(_channel)) {
+			for (var _i = 0; _i < array_length(_channel); _i++) {
+				__broadcast__(_msg, _channel[_i], _cb, _data);
+			}
+			return;
+		}
+		
 		var _list;
 		if (is_string(_channel))
 		{
@@ -263,10 +269,10 @@ function broadcast(_msg, _cb, _data) {
 }
 
 /// @func		broadcast_channel(message, channel, [callback, data])
-/// @param		{enum}		message		Message to broadcast to the receivers
-/// @param		{string}	channel		Name of the channel
-/// @param		{func}		[callback]	Callback function | Default: undefined
-/// @param		{any}		[data]		Data given to callback on receiver side | Default: -1
+/// @param		{enum}			message		Message to broadcast to the receivers
+/// @param		{array/string}	channel		Name(s) of the channel
+/// @param		{func}			[callback]	Callback function | Default: undefined
+/// @param		{any}			[data]		Data given to callback on receiver side | Default: -1
 /// @returns	N/A
 function broadcast_channel(_msg, _channel, _cb, _data) {
 	
