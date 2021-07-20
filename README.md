@@ -1,4 +1,4 @@
-<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.3</h1>
+<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.4</h1>
 <p align="center"><a href="https://twitter.com/Babaganosch">@babaganosch</a></p>
 <p align="center">Download: <a href="https://babaganosch.itch.io/notificationsystem">itch</a></p>
 
@@ -13,6 +13,12 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 </p>
 
 ## Changelog
+
+**v1.2.4**
+* Suppressed tedious warnings
+* Added a setting to disable automatic subscription to global channel when omitting it from `subscribe([...])`
+* Fixed a bug where `unsubscribe()` wasn't working
+* Fixed a bug where `log_channels()` could crash if a channel contained a broken reference id
 
 **v1.2.3**
 * Instances can now decide if they want to listen to the global channel or just listening for messages in their own specific channels they subscribe to. To subscribe to the global channel you can either leave `subscribe()` blank or use `subscribe(global)`
@@ -62,14 +68,14 @@ receiver.add(3, function() {
 
 * It is also possible to subscribe to specific channels
 ```gml
-// Subscribe to channel enemies
+// Subscribe to channel "enemies"
 subscribe("enemies");
 
-// Subscribe instance 100010 to channel enemies
+// Subscribe instance 100010 to channel "enemies"
 subscribe(100010, "enemies");
 ```
 
-* You can also bind an empty callback to a message, in order to only react to messages which includes a callback.
+* You can also bind an empty callback to a message in order to only react to messages which includes a callback.
 
 ```gml
 receiver.add("hello");

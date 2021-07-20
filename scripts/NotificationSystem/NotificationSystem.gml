@@ -23,7 +23,8 @@
 *	                        | github.com/babaganosch/NotificationSystem
 */
 global.__notifications__ = new NotificationSystem();
-#macro __NOTIFICATIONS_SAFE true
+#macro __NOTIFICATIONS_SAFE       true
+#macro __AUTO_SUBSCRIBE_TO_GLOBAL true
 
 /// @struct		NotificationSystem()
 function NotificationSystem() constructor {
@@ -99,6 +100,9 @@ function NotificationSystem() constructor {
 				}
 			}
 			variable_struct_set(_channels, _nameList[_i], _newList);
+            if (array_length(variable_struct_get(_channels, _nameList[_i])) == 0) {
+    			variable_struct_remove(_channels, _nameList[_i]);
+    		}
 		}
 	}
 	
@@ -181,7 +185,10 @@ function NotificationSystem() constructor {
         for (var _i = 0; _i < _len; _i++)
         {
             if (_i != 0) _string += ", ";
-            _string += string(object_get_name(_array[_i].object_index)) + " " + string(_array[_i].id);
+            if (instance_exists(_array[_i]))
+                _string += string(object_get_name(_array[_i].object_index)) + " " + string(_array[_i].id);
+            else
+                _string += "UNKNOWN OBJECT " + string(_array[_i]);
         }
         _string += " ]";
         return _string;
@@ -191,7 +198,7 @@ function NotificationSystem() constructor {
     static __log_channels__ = function() {
         show_debug_message("");
         show_debug_message("-- SUBSCRIBERS --");
-        show_debug_message("no channel:" + __log_array_contents__(_subscribers));
+        show_debug_message("global: " + __log_array_contents__(_subscribers));
         var _names = variable_struct_get_names(_channels);
         for (var _i = 0; _i < array_length(_names); _i++)
         {
@@ -207,6 +214,18 @@ function NotificationSystem() constructor {
 	static __channel_exists__ = function(_channel) {
         return !is_undefined(variable_struct_get(_channels, _channel));
     }
+    
+    __REMOVE_WARNINGS__ = function() {
+        if (false)
+        {
+            channel_exists("");
+            log_channels();
+            unsubscribe();
+            broadcast();
+            _subscribers[0].__notificationsReceiver__ = 0;
+        }
+    }
+    variable_struct_remove(self, __REMOVE_WARNINGS__);
 }
 
 /// @func       channel_exists(channel)
@@ -227,14 +246,15 @@ function log_channels() {
 /// @param		{string}	[channel]	Name of the channel	| Default: no channel
 /// @returns	N/A
 function subscribe(_id, _channel) {
-    if (is_undefined(argument[0])) _id = self;
+    if (is_undefined(argument[0])) _id = self.id;
 	else if (is_string(argument[0]) || is_array(argument[0]) || argument[0] == global)
     {
         _channel = _id;
-        _id = self;
+        _id = self.id;
     }
 	
-	if (!is_undefined(_channel) and _channel != global) {
+	if (!is_undefined(_channel) && _channel != global) {
+        if (__AUTO_SUBSCRIBE_TO_GLOBAL) global.__notifications__.__subscribe__(_id);
 		global.__notifications__.__subscribe_channel__(_channel, _id);
 	} else {
 		global.__notifications__.__subscribe__(_id);
@@ -246,14 +266,14 @@ function subscribe(_id, _channel) {
 /// @param		{string}	[channel]	Name of the channel	| Default: no channel
 /// @returns	N/A
 function unsubscribe(_id, _channel) {
-    if (is_undefined(argument[0])) _id = self;
+    if (is_undefined(argument[0])) _id = self.id;
 	else if (is_string(argument[0]) || is_array(argument[0]) || argument[0] == global)
     {
         _channel = _id;
-        _id = self;
+        _id = self.id;
     }
 	
-	if (!is_undefined(_channel) and _channel != global) {
+	if (!is_undefined(_channel) && _channel != global) {
 		global.__notifications__.__unsubscribe_channel__(_channel, _id);
 	} else {
 		global.__notifications__.__unsubscribe__(_id);
@@ -287,7 +307,7 @@ function broadcast_channel(_msg, _channel, _cb, _data) {
 }
 
 
-/// @struct		Receiver([subscribe])
+/// @struct		Receiver([subscribe channels])
 /// @param		{bool|string}	[subscribe]	Auto subscribe | Default: true
 function Receiver(_sub) constructor {
 	
@@ -305,9 +325,11 @@ function Receiver(_sub) constructor {
 	{
 		if (is_string(_sub) || is_array(_sub) || _sub == global)
 			subscribe(_parent, argument[0]);
+        else if (_sub == true)
+            subscribe(_parent);
 	} else
 	{
-		subscribe(_parent);
+        subscribe(_parent);
 	}
 	
 	/// @func		add(message, [channel, callback])
@@ -376,5 +398,14 @@ function Receiver(_sub) constructor {
 			}
 		}
 	}
+    
+    __REMOVE_WARNINGS__ = function() {
+        if (false)
+        {
+            Receiver();
+            on();
+            remove();
+        }
+    }
+    variable_struct_remove(self, __REMOVE_WARNINGS__);
 }
-
