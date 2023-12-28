@@ -1,5 +1,6 @@
-<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.5</h1>
-<p align="center"><a href="https://twitter.com/Babaganosch">@babaganosch</a></p>
+<h1 align="center">GMS 2.3+ NotificationSystem | v1.2.6</h1>
+<p align="center"><a href="https://larsandersson.info">larsandersson.info</a></p>
+<p align="center">X: <a href="https://twitter.com/Babaganosch">@babaganosch</a></p>
 <p align="center">Download: <a href="https://babaganosch.itch.io/notificationsystem">itch</a></p>
 
 ---
@@ -13,6 +14,9 @@ You only need the 'NotificationSystem' script, but this whole repository contain
 </p>
 
 ## Changelog
+
+**v1.2.6**
+* Fixed Feather errors, warnings and suggestions.
 
 **v1.2.5**
 * Fixed indentation errors in NotificationSystem script

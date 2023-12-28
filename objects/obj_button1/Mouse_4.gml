@@ -1,2 +1,2 @@
-/// @description Send msg hello
-broadcast(MESSAGES.hello);
+/// @description Send msg HELLO
+broadcast(MESSAGES.HELLO);

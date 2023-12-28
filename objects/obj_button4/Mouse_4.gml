@@ -1,4 +1,4 @@
-/// @description Send msg bar
-broadcast(MESSAGES.bar, function() {
-	ConsoleMessage("Message 'bar' sent as callback.");
+/// @description Send msg BAR
+broadcast(MESSAGES.BAR, function() {
+	console_message("Message 'BAR' sent as callback.");
 });

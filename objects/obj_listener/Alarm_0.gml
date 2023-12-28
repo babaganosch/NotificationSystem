@@ -1,4 +1,4 @@
 /// @description DEMO ONLY
 #region -- DEMO ONLY --
-fadeOut = true;
+fade_out = true;
 #endregion

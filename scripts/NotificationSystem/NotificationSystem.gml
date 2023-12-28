@@ -1,5 +1,5 @@
 /**
-*   GMS 2.3+ NotificationSystem | v1.2.4
+*   GMS 2.3+ NotificationSystem | v1.2.6
 *
 *
 *   Struct(s):
@@ -26,14 +26,16 @@ global.__notifications__ = new NotificationSystem();
 #macro __NOTIFICATIONS_SAFE       true
 #macro __AUTO_SUBSCRIBE_TO_GLOBAL true
 
+// feather ignore GM1042
+
 /// @struct     NotificationSystem()
 function NotificationSystem() constructor {
     
     _subscribers = [];
     _channels = {};
     
-    /// @param      {string}    channel     Name of the channel
-    /// @param      {real}      id          Id of the instance to subscribe
+    /// @param      {string}           channel     Name of the channel
+    /// @param      {Id.Instance}      id          Id of the instance to subscribe
     /// @returns    N/A
     static __subscribe_channel__ = function(_channel, _id) {
         
@@ -65,7 +67,7 @@ function NotificationSystem() constructor {
         }
     }
     
-    /// @param      {real}  id              Id of the instance to subscribe
+    /// @param      {Id.Instance}  id              Id of the instance to subscribe
     /// @returns    N/A
     static __subscribe__ = function(_id) {
         var _size = array_length(_subscribers);
@@ -74,40 +76,40 @@ function NotificationSystem() constructor {
         _subscribers[_size] = _id;
     }
     
-    /// @param      {real}  id              Id of the instance to unsubscribe
+    /// @param      {Id.Instance}  id              Id of the instance to unsubscribe
     /// @returns    N/A
     static __unsubscribe__ = function(_id) {
-        var _newSubscribers = [], _j = 0;
+        var _new_subscribers = [], _j = 0;
         for (var _i = 0; _i < array_length(_subscribers); _i++)
         {
             if (_subscribers[_i] != _id)
             {
-                _newSubscribers[_j++] = _subscribers[_i];
+                _new_subscribers[_j++] = _subscribers[_i];
             }
         }
-        _subscribers = _newSubscribers;
+        _subscribers = _new_subscribers;
         
-        var _nameList = variable_struct_get_names(_channels);
-        for (var _i = 0; _i < array_length(_nameList); _i++)
+        var _name_list = variable_struct_get_names(_channels);
+        for (var _i = 0; _i < array_length(_name_list); _i++)
         {
-            var _list = variable_struct_get(_channels, _nameList[_i]);
-            var _newList = [], _z = 0;
-            for (var _j = 0; _j < array_length(_list); _j++)
+            var _list = variable_struct_get(_channels, _name_list[_i]);
+            var _new_list = [], _z = 0;
+            for (_j = 0; _j < array_length(_list); _j++)
             {
                 if (_list[_j] != _id)
                 {
-                    _newList[_z++] = _list[_j];
+                    _new_list[_z++] = _list[_j];
                 }
             }
-            variable_struct_set(_channels, _nameList[_i], _newList);
-            if (array_length(variable_struct_get(_channels, _nameList[_i])) == 0) {
-                variable_struct_remove(_channels, _nameList[_i]);
+            variable_struct_set(_channels, _name_list[_i], _new_list);
+            if (array_length(variable_struct_get(_channels, _name_list[_i])) == 0) {
+                variable_struct_remove(_channels, _name_list[_i]);
             }
         }
     }
     
     /// @param      {string}    channel     Name of the channel
-    /// @param      {real}      id          Id of the instance to unsubscribe
+    /// @param      {Id.Instance}      id          Id of the instance to unsubscribe
     /// @returns    N/A
     static __unsubscribe_channel__ = function(_channel, _id) {
         if (is_array(_channel))
@@ -127,15 +129,15 @@ function NotificationSystem() constructor {
         var _list = variable_struct_get(_channels, _channel);
         if (is_undefined(_list)) return;
         
-        var _newList = [], _j = 0;
+        var _new_list = [], _j = 0;
         for (var _i = 0; _i < array_length(_list); _i++)
         {
             if (_list[_i] != _id)
             {
-                _newList[_j++] = _list[_i];
+                _new_list[_j++] = _list[_i];
             }
         }
-        variable_struct_set(_channels, _channel, _newList);
+        variable_struct_set(_channels, _channel, _new_list);
         if (array_length(variable_struct_get(_channels, _channel)) == 0) {
             variable_struct_remove(_channels, _channel);
         }
@@ -143,7 +145,7 @@ function NotificationSystem() constructor {
     
     /// @param      {real|string}   message         Message to broadcast to the receivers
     /// @param      {string}        channel         Name of the channel
-    /// @param      {func}          callback        Additional callback
+    /// @param      {function}      callback        Additional callback
     /// @param      {any}           data            Data given to callback on receiver side
     /// @returns    N/A
     static __broadcast__ = function(_msg, _channel, _cb, _data) {
@@ -215,17 +217,6 @@ function NotificationSystem() constructor {
         return !is_undefined(variable_struct_get(_channels, _channel));
     }
     
-    __REMOVE_WARNINGS__ = function() {
-        if (false)
-        {
-            channel_exists("");
-            log_channels();
-            unsubscribe();
-            broadcast();
-            _subscribers[0].__notificationsReceiver__ = 0;
-        }
-    }
-    variable_struct_remove(self, "__REMOVE_WARNINGS__");
 }
 
 /// @func       channel_exists(channel)
@@ -242,7 +233,7 @@ function log_channels() {
 }
 
 /// @func       subscribe([id, channel])
-/// @param      {real}          [id]        Id of the instance to subscribe | Default: id of the caller
+/// @param      {Id.Instance}          [id]        Id of the instance to subscribe | Default: id of the caller
 /// @param      {real|string}   [channel]   Name of the channel | Default: no channel
 /// @returns    N/A
 function subscribe(_id, _channel) {
@@ -262,7 +253,7 @@ function subscribe(_id, _channel) {
 }
 
 /// @func       unsubscribe([id, channel])
-/// @param      {real}          [id]        Id of the instance to unsubscribe | Default: id of the caller
+/// @param      {Id.Instance}          [id]        Id of the instance to unsubscribe | Default: id of the caller
 /// @param      {real|string}   [channel]   Name of the channel | Default: no channel
 /// @returns    N/A
 function unsubscribe(_id, _channel) {
@@ -289,6 +280,7 @@ function broadcast(_msg, _cb, _data) {
     broadcast_channel(argument[0], global, _cb, _data);
 }
 
+// feather ignore once GM1062
 /// @func       broadcast_channel(message, channel, [callback, data])
 /// @param      {real|string}           message     Message to broadcast to the receivers
 /// @param      {array|string|global}   channel     Name(s) of the channel
@@ -303,7 +295,7 @@ function broadcast_channel(_msg, _channel, _cb, _data) {
         _data = _cb;
         _cb = undefined;
     }
-    global.__notifications__.__broadcast__(argument[0], _channel, _cb, _data);
+    global.__notifications__.__broadcast__(_msg, _channel, _cb, _data);
 }
 
 
@@ -335,7 +327,7 @@ function Receiver(_sub) constructor {
     /// @func       add(message, [channel, callback])
     /// @param      {real|string}       message         Message to listen for
     /// @param      {string}            [channel]       The channel to listen on
-    /// @param      {func}              [callback]      Callback function to run when message received
+    /// @param      {function}          [callback]      Callback function to run when message received
     /// @returns    N/A
     static add = function(_event, _channel, _cb) {
         if (is_method(_channel)) {
@@ -353,7 +345,7 @@ function Receiver(_sub) constructor {
     /// @func       on(message, [channel, callback])
     /// @param      {real|string}       message         Message to listen for
     /// @param      {string}            [channel]       The channel to listen on
-    /// @param      {func}              [callback]      Callback function to run when message received
+    /// @param      {function}          [callback]      Callback function to run when message received
     /// @returns    N/A
     static on = function(_event, _channel, _cb) {
         add(_event, _channel, _cb);
@@ -364,26 +356,26 @@ function Receiver(_sub) constructor {
     /// @param      {bool}              [trigger]       Run callback once before deletion | Default: false
     /// @returns    N/A
     static remove = function(_event, _trigger) {
-        var _newEvents = [];
+        var _new_events = [];
         var _j = 0;
         for (var _i = 0; _i < _size; _i++)
         {
             if (_events[_i].event != _event)
             {
-                _newEvents[_j] = _events[_i];
+                _new_events[_j] = _events[_i];
                 _j++;
             } else
             {
                 if (!is_undefined(_trigger) && argument[1]) _events[_i].callback();
             }
         }
-        _events = _newEvents;
+        _events = _new_events;
         _size = _j;
     }
     
     /// @param      {real|string}   message     Message to receive
     /// @param      {string}        channel     Channel the msg was sent through
-    /// @param      {func}          callback    Additional callback to run
+    /// @param      {function}      callback    Additional callback to run
     /// @param      {any}           data        Data given to callback on receiver side
     /// @returns    N/A
     static __receive__ = function(_msg, _channel, _cb, _data) {
@@ -398,15 +390,6 @@ function Receiver(_sub) constructor {
             }
         }
     }
-    
-    __REMOVE_WARNINGS__ = function() {
-        if (false)
-        {
-            var dummy = new Receiver();
-            delete(dummy);
-            on(0);
-            remove(0);
-        }
-    }
-    variable_struct_remove(self, "__REMOVE_WARNINGS__");
 }
+
+// feather enable GM1042

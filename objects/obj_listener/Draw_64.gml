@@ -1,16 +1,16 @@
 /// @description DEMO ONLY
 #region -- DEMO ONLY --
-var safezone = 10;
-var offset   = 14;
-var bottom   = display_get_gui_height() - safezone;
-var left	 = safezone;
+var _safezone = 10;
+var _offset   = 14;
+var _bottom   = display_get_gui_height() - _safezone;
+var _left	 = _safezone;
 
-var array_size = ds_list_size(text_array);
+var _array_size = ds_list_size(text_array);
 
 draw_set_valign(fa_bottom);
-for (var i = 0; i < array_size; i++) {
-	draw_set_alpha(alpha - (i * 0.143));
-	draw_text(left, bottom - (i * offset), ds_list_find_value(text_array, i));
+for (var _i = 0; _i < _array_size; _i++) {
+	draw_set_alpha(alpha - (_i * 0.143));
+	draw_text(_left, _bottom - (_i * _offset), ds_list_find_value(text_array, _i));
 }
 
 
